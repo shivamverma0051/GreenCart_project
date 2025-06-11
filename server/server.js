@@ -20,7 +20,8 @@ await connectDB(); // ✅ Only DB connection, no cloudinary needed
 const allowedOrigins = [
   'http://localhost:5173', 
   'https://green-cart-project-6rwi.vercel.app',
-  'https://greencart-frontend-qyiy.onrender.com' // Your Render frontend URL
+   'https://greencart-frontend-qyiy.onrender.com', // Your Render frontend URL
+  'https://greencart-backend-90oo.onrender.com' // Your Render backend URL
 ];
 
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks)
@@ -28,7 +29,23 @@ app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks)
 // Middleware configuration
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ 
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+}));
+
 
 // Routes
 app.get('/', (req, res) => res.send("API is Working"));
