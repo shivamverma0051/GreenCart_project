@@ -17,7 +17,7 @@ const port = process.env.PORT || 4000;
 await connectDB(); // ✅ Only DB connection, no cloudinary needed
 
 // Allow multiple origins
-const allowedOrigins = ['http://localhost:5173', 'https://project-sigma-fawn-45.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://greencart-project-frontend.onrender.com/'];
 
 app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks)
 
