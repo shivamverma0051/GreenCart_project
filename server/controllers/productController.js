@@ -62,10 +62,13 @@ export const productById = async (req, res) => {
 // ✅ Get All Products
 export const productList = async (req, res) => {
   try {
+    console.log('Attempting to fetch products...');
     const products = await Product.find({});
+    console.log(`Found ${products.length} products`);
     res.json({ success: true, products });
   } catch (error) {
-    console.log(error.message);
+    console.error('Product list error:', error.message);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({ success: false, message: error.message });
   }
 };
